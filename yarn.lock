@@ -5307,7 +5307,7 @@
     "yargs" "^16.2.0"
     "zen-observable-ts" "^1.0.0"
 
-"typescript@4.0.5":
+"typescript@^4.0.5":
   "integrity" "sha512-ywmr/VrTVCmNTJ6iV2LwIrfG1P+lv6luD8sUJs+2eI9NLGigaN+nUQc13iHqisq7bra9lnmUSYqbJvegraBOPQ=="
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.0.5.tgz"
   "version" "4.0.5"
