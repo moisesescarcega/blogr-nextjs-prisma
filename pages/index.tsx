@@ -7,7 +7,6 @@ import prisma from '../lib/prisma'
 export const getStaticProps: GetStaticProps = async () => {
 
   const feed = await prisma.post.findMany({
-    where: {published: true},
     include: {
       author: {
         select: {name: true},
@@ -42,6 +41,7 @@ const Blog: React.FC<Props> = (props) => {
 
         .post:hover {
           box-shadow: 1px 1px 3px #aaa;
+          cursor: pointer;
         }
 
         .post + .post {
