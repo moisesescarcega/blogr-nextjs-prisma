@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { GetServerSideProps } from 'next';
-import Layout from '../../components/Layout';
-import Router from 'next/router';
-import { PostProps } from '../../components/Post';
-import { useSession } from 'next-auth/client';
-import prisma from '../../lib/prisma';
+import React, { useState } from "react";
+import { GetServerSideProps } from "next";
+import Layout from "../../components/Layout";
+import Router from "next/router";
+import { PostProps } from "../../components/Post";
+import { useSession } from "next-auth/client";
+import prisma from "../../lib/prisma";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const post = await prisma.post.findUnique({
@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     },
     include: {
       author: {
-        select: {name: true, email: true},
+        select: { name: true, email: true },
       },
     },
   });
@@ -26,42 +26,35 @@ async function publishPost(id: number): Promise<void> {
   await fetch(`/api/publish/${id}`, {
     method: "PUT",
   });
-  await Router.push('/');
+  await Router.push("/");
 }
-
-// async function updatePost(id: number): Promise<void> {
-//   await fetch(`/api/update/${id}`, {
-//     method: "PUT",
-//   });
-//   await Router.push('/');
-// }
 
 async function deletePost(id: number): Promise<void> {
   await fetch(`/api/post/${id}`, {
     method: "DELETE",
   });
-  await Router.push('/');
+  await Router.push("/");
 }
 
 const Post: React.FC<PostProps> = (props) => {
-  const [ptitle, setPtitle] = useState(props.title);
+  let [ptitle, setPtitle] = useState(props.title);
   const [pcontent, setPcontent] = useState(props.content);
   const [session, loading] = useSession();
 
   const updatePost = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
-        const body = { ptitle, pcontent };
-        await fetch(`/api/update/${props.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-        });
-        await Router.push('/');
-    } catch(error) {
-        console.error(error);
+      const body = { ptitle, pcontent };
+      await fetch(`/api/update/${props.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      await Router.push("/");
+    } catch (error) {
+      console.error(error);
     }
-};
+  };
 
   if (loading) {
     return <div>Authenticating ...</div>;
@@ -69,18 +62,13 @@ const Post: React.FC<PostProps> = (props) => {
   const userHasValidSession = Boolean(session);
   const postBelongsToUser = session?.user?.email === props.author?.email;
   let title = props.title;
-  // if (!props.published) {
-  //   title = `${title} (Draft)`;
-  // }
 
   return (
     <Layout>
       <div>
         <h2>{title}</h2>
-        <p>By {props?.author?.name || 'Unknown author'}</p>
-        <div className="post-content">
-          {props.content}
-        </div>
+        <p>By {props?.author?.name || "Unknown author"}</p>
+        <div className="post-content">{props.content}</div>
         {!props.published && userHasValidSession && postBelongsToUser && (
           <button onClick={() => publishPost(props.id)}>Publish</button>
         )}
@@ -90,26 +78,26 @@ const Post: React.FC<PostProps> = (props) => {
       </div>
       <hr />
       <div>
-          <form onSubmit={updatePost}>
-              <input
-                  autoFocus
-                  onChange={(e) => setPtitle(e.target.value)}
-                  placeholder="Title"
-                  type="text"
-                  value={props.title}
-              />
-              <textarea
-                  cols={50}
-                  onChange={(e) => setPcontent(e.target.value)}
-                  placeholder="Content"
-                  rows={8}
-                  value={props.content + 'uno'}
-              />
-              <input type="submit" value="Update" />
-              <a className="back" href="#" onClick={() => Router.push('/')}>
-                  or Cancel
-              </a>
-          </form>
+        <form onSubmit={updatePost}>
+          <input
+            autoFocus
+            onChange={(e) => setPtitle(e.target.value)}
+            placeholder="Title"
+            type="text"
+            value={ptitle}
+          />
+          <textarea
+            cols={50}
+            onChange={(e) => setPcontent(e.target.value)}
+            placeholder="Content"
+            rows={8}
+            value={pcontent}
+          />
+          <input type="submit" value="Update" />
+          <a className="back" href="#" onClick={() => Router.push("/")}>
+            or Cancel
+          </a>
+        </form>
       </div>
 
       <style jsx>{`
@@ -140,4 +128,4 @@ const Post: React.FC<PostProps> = (props) => {
   );
 };
 
-export default Post
+export default Post;
