@@ -1,5 +1,6 @@
 import React from "react";
 import Router from "next/router";
+import { useSession } from "next-auth/client";
 
 export type PostProps = {
   id: number;
@@ -13,9 +14,15 @@ export type PostProps = {
 };
 
 const Post: React.FC<{ post: PostProps }> = ({ post }) => {
+  const [session] = useSession();
+  const verificaSesion = () => {
+    if (session) {
+      Router.push("/p/[id]", `/p/${post.id}`);
+    }
+  };
   const authorName = post.author ? post.author.name : "Unknown author";
   return (
-    <div onClick={() => Router.push("/p/[id]", `/p/${post.id}`)}>
+    <div onClick={verificaSesion}>
       <h2>{post.title}</h2>
       <small>By {authorName}</small>
       <div>{post.content}</div>

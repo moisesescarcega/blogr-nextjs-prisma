@@ -93,7 +93,9 @@ const Post: React.FC<PostProps> = (props) => {
             rows={8}
             value={pcontent}
           />
-          <input type="submit" value="Update" />
+          {userHasValidSession && (
+            <input type="submit" value="Update" />
+          )}
           <a className="back" href="#" onClick={() => Router.push("/")}>
             or Cancel
           </a>
